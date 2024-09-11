@@ -143,18 +143,22 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
-        if (movement.x > 0)
+        if (movement.x < 0)
         {
             // Flip the player by rotating 0 degrees
             transform.rotation = Quaternion.Euler(0, 0, 0);
         }
-        else if (movement.x < 0)
+        else if (movement.x > 0)
         {
             // Flip the player by rotating 180 degrees
             transform.rotation = Quaternion.Euler(0, 180, 0);
         }
+
+        animator.SetFloat("speed", movement.sqrMagnitude);
         // Move the player
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+
+
     }
 
     IEnumerator Die()
