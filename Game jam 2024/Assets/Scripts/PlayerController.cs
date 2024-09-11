@@ -68,20 +68,20 @@ public class PlayerController : MonoBehaviour
         if (dead) { return; }
         if (collision.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
         {
-            StartCoroutine(KnockBack(collision, enemy));
+            // StartCoroutine(KnockBack(collision, enemy));
             TakeDamage(enemy.damage);
         }
     }
 
-    IEnumerator KnockBack(Collision2D collision, Enemy enemy)
-    {
-        disableMovement = true;
-        Vector2 direction = (transform.position - collision.transform.position).normalized;
-        rb.AddForce(direction * enemy.knockbackForce, ForceMode2D.Impulse);
-        yield return new WaitForSeconds(0.02f);
-        rb.velocity = Vector2.zero;
-        disableMovement = false;
-    }
+    // IEnumerator KnockBack(Collision2D collision, Enemy enemy)
+    // {
+    //     disableMovement = true;
+    //     Vector2 direction = (transform.position - collision.transform.position).normalized;
+    //     rb.AddForce(direction * enemy.knockbackForce, ForceMode2D.Impulse);
+    //     yield return new WaitForSeconds(0.02f);
+    //     rb.velocity = Vector2.zero;
+    //     disableMovement = false;
+    // }
 
 
     void TakeDamage(float damage)
