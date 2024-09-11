@@ -6,14 +6,17 @@ public class NPCMovement : MonoBehaviour
 {
     // Start is called before the first frame update
     private Rigidbody2D rb;
-    private readonly float moveSpeed = 5f;
+    public float moveSpeed = 5f;
     public float destRange = 5f;
     public Vector2 dest;
     private float timeOut = 3f;
     private bool atDest = false;
+
+    private Animator animator;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
         dest = new Vector2(
             rb.position.x + Random.Range(-destRange, destRange),
             rb.position.y + Random.Range(-destRange, destRange)
@@ -24,7 +27,7 @@ public class NPCMovement : MonoBehaviour
     void Update()
     {
         if (atDest) timeOut -= Time.deltaTime;
-        if (timeOut <= 0)
+        if (timeOut <= 0 && destRange > 0)
         {
             atDest = false;
             timeOut = 3f;
@@ -41,8 +44,17 @@ public class NPCMovement : MonoBehaviour
         Vector2 norm = (dest - rb.position).normalized;
         float ang = Mathf.Atan2(norm.y, norm.x);
         Vector2 newPos = rb.position + norm * moveSpeed * Time.fixedDeltaTime;
+
+        animator.SetFloat("speed", norm.sqrMagnitude);
+
+        // Check if at destination
+        if (rb.position == dest) atDest = true;
+
+        //A lazy fix to it reseting its rotation
+        if (atDest) { return; }
+
         // Quadrant 1 (x +ve, y +ve)
-        if (ang >= 0 && ang <= Mathf.PI/2)
+        if (ang >= 0 && ang <= Mathf.PI / 2)
         {
             transform.rotation = Quaternion.Euler(0, 180, 0);
             rb.MovePosition(new Vector2(
@@ -51,7 +63,7 @@ public class NPCMovement : MonoBehaviour
             ));
         }
         // Quadrant 2 (x -ve, y +ve)
-        else if (ang >= Mathf.PI/2 && ang <= Mathf.PI)
+        else if (ang >= Mathf.PI / 2 && ang <= Mathf.PI)
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
             rb.MovePosition(new Vector2(
@@ -60,7 +72,7 @@ public class NPCMovement : MonoBehaviour
             ));
         }
         // Quadrant 3 (x -ve, y -ve)
-        else if (ang >= -Mathf.PI && ang <= -Mathf.PI/2)
+        else if (ang >= -Mathf.PI && ang <= -Mathf.PI / 2)
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
             rb.MovePosition(new Vector2(
@@ -78,7 +90,6 @@ public class NPCMovement : MonoBehaviour
             ));
         }
 
-        // Check if at destination
-        if (rb.position == dest) atDest = true;
+
     }
 }
